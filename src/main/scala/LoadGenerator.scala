@@ -5,9 +5,9 @@ import se.scalablesolutions.akka.actor.Actor
 import se.scalablesolutions.akka.camel.{Message, Consumer}
 
 object Loader {
-  def main(args: Array[String]):Unit = {
+  def main(count: Int):Unit = {
     println("Running!")
-    1 to 100 foreach ( x => send(x.toString) )
+    1 to count foreach ( x => send(x.toString) )
     println("Done!")
   }
 
@@ -34,16 +34,20 @@ object Loader {
 
   def send(id: String) {
     statusMonitor ! Sent(id)
+    //java.lang.Thread.sleep(1)
     Actor.spawn {
-    statusMonitor ! Done(scala.io.Source.fromURL("http://localhost:8877/?id="+id).mkString)
-    //asyncHttpClient.prepareGet("http://localhost:8877/?id="+id).execute(new AsyncCompletionHandler[Unit](){
-    //  override def onCompleted(response: Response): Unit = {
-    //    statusMonitor ! Done(response.getResponseBody)
-    //  }
-    //  override def onThrowable(t: Throwable) {
-    //    println(t)
-    //  }
-    //})
+    //statusMonitor ! Done(scala.io.Source.fromURL("http://localhost:8877/?id="+id).mkString)
+    asyncHttpClient.prepareGet("http://localhost:8877/?id="+id).execute(new AsyncCompletionHandler[Unit](){
+      override def onCompleted(response: Response): Unit = {
+        val result = response.getResponseBody
+        //println("Expecting '%s' and got '%s'" format (id, result))
+        assert(id == result)
+        statusMonitor ! Done(result)
+      }
+      override def onThrowable(t: Throwable) {
+        println(t)
+      }
+    })
     }
   }
 }

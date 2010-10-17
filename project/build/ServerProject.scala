@@ -21,6 +21,6 @@ class ServerProject (info: ProjectInfo) extends DefaultProject(info) with AkkaPr
   //lazy val openid4java-xri = "org.openid4java" % "openid4java-xri" % openid4jVersion
   //lazy val openid4java = "org.openid4java" % "openid4java" % openid4jVersion
 
-  lazy val camel_jetty = "org.apache.camel" % "camel-jetty" % "2.4.0"
+  lazy val camel_jetty = "org.apache.camel" % "camel-jetty" % "2.4.0.1"
   //lazy val camel_spring = "org.apache.camel" % "camel-spring" % "2.4.0"
 }
